@@ -1,10 +1,24 @@
 # Curriculum Implementation Readiness
 
+## Document Metadata
+
+- Created: `2026-08-13`
+- Last updated: `2026-08-13`
+- Status: `Official implementation-readiness contract after minor review revisions`
+- Applies to curriculum file: `docs/curriculum/data_centric_object_detection_curriculum.md`
+- Applies to architecture freeze: `docs/curriculum/curriculum_architecture_freeze.md`
+- Prior review: `docs/reviews/curriculum/2026-08-13_004151_curriculum_review.md`
+- Prior response trace: `docs/reviews/curriculum/2026-08-13_004151_curriculum_review_response.md`
+- Latest review: `docs/reviews/curriculum/2026-08-13_005312_curriculum_implementation_readiness_review.md`
+- Latest response trace: `docs/reviews/curriculum/2026-08-13_005312_curriculum_implementation_readiness_review_response.md`
+- Baseline implementation commit reviewed: `27c58370c6b5390ab21bb7f020e9d0926355f249`
+
 This document addresses the curriculum review in `docs/reviews/curriculum/2026-08-13_004151_curriculum_review.md`.
 
 Review response trace:
 
 - `docs/reviews/curriculum/2026-08-13_004151_curriculum_review_response.md`
+- `docs/reviews/curriculum/2026-08-13_005312_curriculum_implementation_readiness_review_response.md`
 
 Purpose:
 
@@ -58,7 +72,26 @@ Module 17 is no longer treated as one broad required module.
 It becomes a library of optional decision cases selected by failure pattern.
 ```
 
-## 2. Observable Objective Standard
+## 2. Milestone Gates
+
+Modules 0-14 remain Core, but they are grouped into milestones to prevent a long undifferentiated path before visible model feedback.
+
+| Milestone | Modules | Integrated task | Pass criteria |
+|---|---|---|---|
+| Foundation Readiness | 0-2 | Run environment, inspect images, debug bbox/IoU/preprocessing examples. | Learner reaches at least `Acceptable` on the environment and bbox foundation artifacts, with no critical reasoning failure. |
+| Ground Truth Readiness | 3-5 | Produce problem-linked ontology, annotation policy, metadata schema, and dataset manifest. | Learner reaches at least `Acceptable` on ontology/policy and manifest rubrics, and can explain why Dataset v1 exists. |
+| Dataset Trust Readiness | 6-7 | Design split policy and write minimal dataset audit. | Learner reaches at least `Acceptable` on split/leakage and dataset diagnosis artifacts, and identifies at least two deployment-aligned risks. |
+| Baseline Measurement Readiness | 8-10 | Run baseline evaluation and write a controlled experiment plan. | Learner reaches at least `Acceptable` on evaluation and experiment report rubrics, and states allowed/not-allowed conclusions. |
+| Diagnosis Readiness | 11-14 | Produce failure taxonomy, root-cause report, regression checklist, and intervention proposal. | Learner reaches at least `Acceptable` on error/root-cause/intervention artifacts, with at least one falsifiable hypothesis. |
+
+Milestone pass rule:
+
+```text
+The learner may continue only when the integrated task reaches Acceptable
+and contains no critical reasoning failure.
+```
+
+## 3. Observable Objective Standard
 
 All lessons must use observable objectives.
 
@@ -85,7 +118,60 @@ under <constraint/context>
 and can explain <decision/tradeoff>.
 ```
 
-## 3. Observable Module Objectives and Exit Criteria
+## 4. Module Pass/Fail Rules
+
+Module exit criteria define required artifacts. Passing a module requires quality, not just artifact existence.
+
+General pass rule:
+
+```text
+To pass a module, learner must reach at least Acceptable on the relevant artifact
+rubric and must not contain any critical reasoning failure.
+```
+
+Critical reasoning failures:
+
+- treating correlation as causation;
+- claiming root cause without evidence;
+- changing multiple variables while claiming attribution;
+- using the final test set for iterative tuning;
+- proposing "more data" without specifying target distribution;
+- using an advanced technique because it is advanced;
+- ignoring split/leakage risk when interpreting generalization;
+- reporting metric improvement without stating what conclusion is and is not allowed;
+- hiding insufficient evidence behind an overconfident recommendation.
+
+Capstone pass rule:
+
+```text
+Capstone passes only if Problem Formulation, Evidence Quality, Diagnosis Quality,
+Hypothesis Quality, Experimental Design, Interpretation, Decision Quality, and
+Reproducibility each reach at least Acceptable, with at least three dimensions
+at Strong or above.
+```
+
+## 5. Lesson-Level Scaffolding Standard
+
+Every lesson should follow this local structure:
+
+1. Scenario
+2. Learner prediction
+3. Evidence
+4. Concept
+5. Guided practice
+6. Independent task
+7. Common wrong answers
+8. Artifact
+9. Rubric
+10. Exit check
+
+Purpose:
+
+- preserve Socratic reasoning;
+- avoid turning readiness rules into a compliance checklist;
+- force practice before explanation becomes abstract.
+
+## 6. Observable Module Objectives and Exit Criteria
 
 ### Module 0: Learning System, Tools and Reproducibility Basics
 
@@ -98,7 +184,7 @@ After this module, learner can:
 
 Exit criteria:
 
-- `conda run -n data4cv pytest` passes;
+- the project-approved test command passes, currently `conda run -n data4cv pytest`;
 - learner produces an experiment README containing objective, command, data version, config, and result placeholder.
 
 Common wrong answers:
@@ -464,7 +550,7 @@ Common wrong answers:
 - "The capstone is complete when the model trains."
 - "A metric improvement is enough without explaining attribution."
 
-## 4. Lightweight Experiment Template for Early Modules
+## 7. Lightweight Experiment Template for Early Modules
 
 Use this template from Module 1 onward, before formal experiment methodology is taught.
 
@@ -487,7 +573,7 @@ Purpose:
 - introduce controlled reasoning early;
 - make conclusions modest before statistical tools are taught.
 
-## 5. Required Experiment Manifest
+## 8. Required Experiment Manifest
 
 Every non-trivial experiment must include this manifest.
 
@@ -513,12 +599,16 @@ known_confounders:
 decision_rule:
 statistical_method:
 practical_significance_rule:
+allowed_conclusions:
+not_allowed_conclusions:
 
 result:
 interpretation:
 limitations:
 next_action:
 ```
+
+`model_version` must specify architecture, pretrained weights, checkpoint, and any model-selection rule when applicable.
 
 Minimum rules:
 
@@ -527,7 +617,15 @@ Minimum rules:
 - Report both statistical significance and practical/production significance.
 - Dataset v1 vs Dataset v2 comparisons must state exactly what changed and what stayed fixed.
 
-## 6. Dataset Availability and Metadata Plan
+Operational statistical guidance:
+
+- Use repeated seeds when comparing model training runs, augmentation changes, optimization changes, or any result where the observed AP/recall difference is close to baseline variance.
+- Use bootstrap or resampling to estimate uncertainty for recall/AP on a fixed test slice, especially for small condition-wise subsets.
+- Bootstrap is not enough if the test set itself is biased, leaked, stale, or unrepresentative.
+- Statistical significance does not imply production significance; the effect must be large enough to affect the deployment decision.
+- Effective sample size is a diagnostic concept, not always an exactly estimable number from metadata alone.
+
+## 9. Dataset Availability and Metadata Plan
 
 The longitudinal project needs an explicit material plan before lessons begin.
 
@@ -555,7 +653,7 @@ Dataset v0 can be small and imperfect. It must contain enough examples to expose
 - different cameras or sites if possible;
 - day/night or lighting variation if possible.
 
-### Required Metadata Schema
+### Tiered Metadata Schema
 
 Every image should have a metadata record when available:
 
@@ -581,17 +679,51 @@ dataset_version:
 split:
 ```
 
-Minimum required fields for leakage-aware work:
+Required for identity and lineage:
 
 - `image_id`;
+- `source_uri`;
+- `source_type`;
+- `dataset_version`;
+- `split`.
+
+Required for leakage-aware split when available:
+
 - `site_id`;
 - `camera_id`;
 - `video_id`;
 - `frame_index` or `timestamp`;
-- `dataset_version`;
-- `split`.
 
-## 7. Minimal Gates Before Baseline
+Recommended for diagnosis:
+
+- `time_of_day`;
+- `weather`;
+- `lighting`;
+- `activity_type`;
+- `scene_type`;
+- `height_or_viewpoint`;
+- `collection_method`.
+
+Optional when available:
+
+- richer environment metadata;
+- worker activity metadata;
+- camera calibration metadata;
+- site operational metadata.
+
+Governance fields:
+
+- `license_or_permission`;
+- `privacy_risk`.
+
+Rule:
+
+```text
+Missing recommended metadata does not make a dataset unusable,
+but it limits which diagnosis and split claims are allowed.
+```
+
+## 10. Minimal Gates Before Baseline
 
 Do not train Baseline v1 until these gates are satisfied.
 
@@ -630,7 +762,7 @@ Minimal dataset audit must include:
 - duplicate/leakage risk note;
 - annotation quality spot-check note.
 
-## 8. Artifact Rubrics
+## 11. Artifact Rubrics
 
 Use four levels:
 
@@ -783,7 +915,7 @@ Excellent:
 
 - independently handles ambiguity, conflicting evidence, cost/risk tradeoffs, uncertainty, governance, and defensible final recommendation.
 
-## 9. Required Report Reasoning Sections
+## 12. Required Report Reasoning Sections
 
 Every major report must include:
 
@@ -801,9 +933,18 @@ Limitations
 Recommendation
 ```
 
+`Insufficient evidence` is an acceptable conclusion when evidence does not justify a root-cause or intervention claim. In that case, the learner must state:
+
+```text
+Insufficient evidence
+-> what evidence is missing
+-> why the current evidence is not enough
+-> smallest next evidence-gathering step
+```
+
 This prevents learner answers from staying vague.
 
-## 10. Prerequisite Blocks to Add Before Lessons
+## 13. Prerequisite Blocks to Add Before Lessons
 
 These are short prerequisite blocks, not new full modules.
 
@@ -851,7 +992,18 @@ Basic model prediction format:
 - image id;
 - thresholded vs raw predictions.
 
-## 11. Advanced Technique Decision Cases
+Basic detection annotation formats:
+
+- COCO-style image, annotation and category structure;
+- YOLO-style text labels;
+- Pascal VOC-style XML structure at awareness level;
+- bbox coordinate convention risk;
+- normalized vs absolute coordinate risk;
+- class id mapping risk;
+- image id / annotation id consistency;
+- conversion validation checks.
+
+## 14. Advanced Technique Decision Cases
 
 Module 17 is now a decision-case library. Use one case only when a failure pattern justifies it.
 
@@ -886,7 +1038,7 @@ Decision cases:
 | Dataset valuation | Research question requires estimating contribution of data subsets. |
 | Dataset distillation | Research track only; not needed for core applied diagnosis. |
 
-## 12. Evaluation-Set Governance
+## 15. Evaluation-Set Governance
 
 Test/evaluation data must be governed.
 
@@ -912,7 +1064,7 @@ last_modified:
 reason_for_change:
 ```
 
-## 13. Model Training Failure Modes to Teach Operationally
+## 16. Model Training Failure Modes to Teach Operationally
 
 Teach these as diagnostic possibilities, not as extra theory modules:
 
@@ -934,7 +1086,7 @@ Each failure mode should be tied to:
 Symptom -> Evidence -> Check -> Fix -> Validation
 ```
 
-## 14. Revised First Implementation Sequence
+## 17. Revised First Implementation Sequence
 
 The first implementation sequence is now:
 
@@ -956,7 +1108,7 @@ The first implementation sequence is now:
 
 This fixes the prior gap where baseline work could begin before manifest, versioning, and minimal audit gates.
 
-## 15. Implementation Freeze Rule
+## 18. Implementation Freeze Rule
 
 Lesson implementation must obey:
 
