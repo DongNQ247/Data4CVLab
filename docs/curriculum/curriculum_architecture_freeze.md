@@ -2,6 +2,8 @@
 
 This document freezes the architecture of the Data4CVLab curriculum. From this point, the priority is depth, reasoning, experimentation, and real-world diagnostic ability. Do not keep expanding the syllabus by adding more topics unless a new topic directly improves one of the core capabilities below.
 
+Implementation readiness details, including track labels, observable objectives, exit criteria, artifact rubrics, experiment manifests, and first implementation gates, are defined in `docs/curriculum/curriculum_implementation_readiness.md`.
+
 Core training objective:
 
 ```text
