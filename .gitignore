@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# Local data and experiment artifacts can be large or private.
+data/raw/*
+data/interim/*
+data/processed/*
+data/external/*
+experiments/*
+reports/**/*.png
+reports/**/*.jpg
+reports/**/*.jpeg
+reports/**/*.csv
+reports/**/*.json
+
+!.gitkeep
+!data/**/.gitkeep
+!experiments/.gitkeep
+
