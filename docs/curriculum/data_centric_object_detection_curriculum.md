@@ -2,6 +2,8 @@
 
 Tài liệu này là bản thiết kế lại của chương trình đào tạo `Data4CVLab`. Mục tiêu không phải là "học Data-Centric Computer Vision" như một tập hợp thuật ngữ. Mục tiêu là đào tạo một năng lực engineering và applied research rõ ràng:
 
+Curriculum architecture is frozen in `docs/curriculum/curriculum_architecture_freeze.md`. Future changes should prioritize depth over breadth and must follow the freeze rule in that document.
+
 ```text
 Given an ambiguous Computer Vision problem, the learner can systematically
 determine what is wrong, why it is wrong, what should be changed,
