@@ -2,6 +2,8 @@
 
 Data4CVLab is a learning and research workspace for data-centric computer vision, with a focus on object detection.
 
+Repo-level agent instructions are defined in `AGENTS.md`. Read that file before changing project structure, learning materials, or code.
+
 The working philosophy is:
 
 ```text
@@ -49,4 +51,3 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 ```
-
