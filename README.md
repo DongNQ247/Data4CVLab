@@ -40,14 +40,14 @@ Report in reports/.
 Recommended setup:
 
 ```bash
-uv venv
-uv pip install -e ".[dev]"
+conda env create -f environment.yml
+conda activate data4cv
 ```
 
-Alternative with standard Python:
+Register the environment as a Jupyter kernel:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+python -m ipykernel install --user --name data4cv --display-name "Python (data4cv)"
 ```
+
+Use `Python (data4cv)` when opening notebooks.
