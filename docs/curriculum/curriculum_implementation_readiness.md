@@ -2,6 +2,10 @@
 
 This document addresses the curriculum review in `docs/reviews/curriculum/2026-08-13_004151_curriculum_review.md`.
 
+Review response trace:
+
+- `docs/reviews/curriculum/2026-08-13_004151_curriculum_review_response.md`
+
 Purpose:
 
 ```text
